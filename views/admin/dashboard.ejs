@@ -1,0 +1,32 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Tổng quan') %></h1>
+<p class="muted"><%= at('Search backend:') %> <b><%= provider %></b></p>
+<% if (engineWarn) { %>
+<p class="flashmsg error"><%= at('⚠ Ghi vào search engine đang lỗi:') %> <%= at(engineWarn.message) %>
+  <% if (can('engine.view')) { %><a href="/admin/engine"><%= at('Xem chi tiết và cách sửa →') %></a><% } %></p>
+<% } %>
+<div class="cards">
+  <div class="card"><b><%= stats.docs.toLocaleString(lang === 'en' ? 'en-US' : 'vi-VN') %></b><span><%= at('Trang đã index') %></span></div>
+  <div class="card"><b><%= stats.sources %></b><span><%= at('Nguồn crawl') %></span></div>
+  <div class="card"><b><%= stats.queries.toLocaleString(lang === 'en' ? 'en-US' : 'vi-VN') %></b><span><%= at('Tổng lượt tìm') %></span></div>
+  <div class="card"><b><%= stats.today %></b><span><%= at('Lượt tìm hôm nay') %></span></div>
+  <a class="card" href="/admin/submissions"><b><%= stats.pending %></b><span><%= at('Site chờ duyệt') %></span></a>
+</div>
+
+<h2><%= at('7 ngày gần nhất') %></h2>
+<div class="bars">
+  <% perDay.forEach(function(p){ %>
+    <div class="bar"><i style="height:<%= Math.round(p.c / max * 100) %>%"></i><small><%= p.d.slice(5) %></small><em><%= p.c %></em></div>
+  <% }) %>
+  <% if (!perDay.length) { %><p class="muted"><%= at('Chưa có dữ liệu.') %></p><% } %>
+</div>
+
+<div class="two">
+  <div><h2><%= at('Từ khóa phổ biến') %></h2>
+    <table><tr><th><%= at('Từ khóa') %></th><th><%= at('Lượt') %></th></tr>
+      <% top.forEach(function(t){ %><tr><td><%= t.q %></td><td><%= t.c %></td></tr><% }) %></table></div>
+  <div><h2><%= at('Tìm không có kết quả') %></h2>
+    <table><tr><th><%= at('Từ khóa') %></th><th><%= at('Lượt') %></th></tr>
+      <% empty.forEach(function(t){ %><tr><td><%= t.q %></td><td><%= t.c %></td></tr><% }) %></table></div>
+</div>
+</section></body></html>

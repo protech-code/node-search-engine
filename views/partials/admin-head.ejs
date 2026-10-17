@@ -1,0 +1,50 @@
+<%- include('head') %>
+<body class="admin">
+<aside>
+  <div class="brand"><%= site.siteName %> <%= at('Admin') %></div>
+  <%- include('admin-language') %>
+  <nav>
+    <% [
+      ['dashboard.view', '/admin', 'dashboard', 'Tổng quan'],
+      ['sources.manage', '/admin/sources', 'sources', 'Nguồn crawl'],
+      ['keywords.manage', '/admin/keywords', 'keywords', 'Từ khóa'],
+      ['submissions.manage', '/admin/submissions', 'submissions', 'Yêu cầu gửi site'],
+      ['sites.manage', '/admin/sites', 'sites', 'Chủ web'],
+      ['index.manage', '/admin/index', 'index', 'Index'],
+      ['engine.view', '/admin/engine', 'engine', 'Engine'],
+      ['seo.manage', '/admin/seo', 'seo', 'SEO'],
+      ['appearance.manage', '/admin/appearance', 'appearance', 'Giao diện'],
+      ['accounts.manage', '/admin/accounts', 'accounts', 'Quản lý tài khoản'],
+      ['roles.manage', '/admin/roles', 'roles', 'Vai trò'],
+    ].forEach(function(n){ if (can(n[0])) { %>
+      <a href="<%= n[1] %>" class="<%= tab === n[2] ? 'on' : '' %>"><%= at(n[3]) %></a>
+    <% } }) %>
+    <a href="/" target="_blank"><%= at('Xem site ↗') %></a>
+  </nav>
+  <details class="admin-customizer">
+    <summary><%= at('Chọn giao diện') %></summary>
+    <div class="admin-customizer-panel">
+      <label><%= at('Chế độ màu') %>
+        <select data-admin-theme-mode>
+          <option value="auto" <%= adminTheme.mode === 'auto' ? 'selected' : '' %>><%= at('Theo thiết bị') %></option>
+          <option value="light" <%= adminTheme.mode === 'light' ? 'selected' : '' %>><%= at('Sáng') %></option>
+          <option value="dark" <%= adminTheme.mode === 'dark' ? 'selected' : '' %>><%= at('Tối') %></option>
+        </select>
+      </label>
+      <span class="customizer-label"><%= at('Màu nhấn') %></span>
+      <div class="admin-swatches">
+        <% adminTheme.colors.forEach(function(c){ %>
+          <button type="button" class="admin-swatch" data-admin-accent="<%= c[1] %>" style="--swatch:<%= c[1] %>" aria-label="<%= c[0] %>" title="<%= c[0] %>"></button>
+        <% }) %>
+      </div>
+      <label><%= at('Màu tùy chỉnh') %>
+        <input type="color" value="<%= adminTheme.accent %>" data-admin-accent-input aria-label="<%= at('Chọn màu nhấn') %>">
+      </label>
+    </div>
+  </details>
+  <small class="muted"><%= admin.username %> · <%= admin.role || '—' %></small>
+  <form method="post" action="/admin/logout"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="link"><%= at('Đăng xuất') %></button></form>
+</aside>
+<section class="content">
+<% if (typeof flash !== 'undefined' && flash) { %><p class="flashmsg <%= flash.type %>"><%= at(flash.msg) %></p><% } %>
+<script src="/app.js?v=<%= assetV %>" defer></script>

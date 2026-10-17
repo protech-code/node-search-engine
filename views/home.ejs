@@ -1,0 +1,12 @@
+<%- include('partials/head') %>
+<body class="home <%= ui.bgClass %>">
+  <main>
+    <h1 class="logo"><%- include('partials/brand') %></h1>
+    <p class="tagline"><%= ui.description %></p>
+    <%- include('partials/searchbox') %>
+    <% if (popular.length) { %>
+      <p class="popular"><%= t('home.popular') %> <% popular.forEach(function(p){ %><a href="/search?q=<%= encodeURIComponent(p) %>"><%= p %></a> <% }) %></p>
+    <% } %>
+  </main>
+  <%- include('partials/footer') %>
+</body></html>

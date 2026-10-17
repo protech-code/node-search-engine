@@ -1,0 +1,43 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Vai trò') %></h1>
+<p class="muted"><%= at('Mỗi quản trị viên có một vai trò; vai trò quyết định họ được vào khu vực nào. Bạn chỉ có thể trao/sửa quyền nằm trong phạm vi quyền của chính bạn.') %></p>
+
+<div class="block">
+  <h2><%= at('Thêm vai trò') %></h2>
+  <form method="post" action="/admin/roles" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <input name="name" placeholder="<%= at('Tên vai trò (vd: moderator)') %>" required pattern="[a-z0-9_-]{2,30}">
+    <div class="perms">
+      <% Object.entries(PERMISSIONS).forEach(function(p){ var ok = subset(actor, [p[0]]); %>
+      <label class="check <%= ok ? '' : 'off' %>"><input type="checkbox" name="perm" value="<%= p[0] %>" <%= ok ? '' : 'disabled' %>> <%= at(p[1]) %> <small class="muted"><%= p[0] %></small></label>
+      <% }) %>
+    </div>
+    <button><%= at('Tạo vai trò') %></button>
+  </form>
+</div>
+
+<% roles.forEach(function(r){ var sup = isSuper(r.permissions); var editable = !sup && subset(actor, r.permissions); %>
+<div class="block">
+  <h2><%= r.name %>
+    <% if (r.builtin) { %><span class="tag"><%= at('mặc định') %></span><% } %>
+    <% if (sup) { %><span class="tag ok"><%= at('toàn quyền') %></span><% } %>
+    <small class="muted"><%= r.members %> <%= at('tài khoản') %></small></h2>
+  <% if (sup) { %>
+    <p class="muted"><%= at('Superadmin có mọi quyền và không thể chỉnh sửa.') %></p>
+  <% } else { %>
+  <form method="post" action="/admin/roles/<%= r.id %>" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <div class="perms">
+      <% Object.entries(PERMISSIONS).forEach(function(p){ var can_ = editable && subset(actor, [p[0]]); %>
+      <label class="check <%= can_ ? '' : 'off' %>"><input type="checkbox" name="perm" value="<%= p[0] %>" <%= r.permissions.includes(p[0]) ? 'checked' : '' %> <%= can_ ? '' : 'disabled' %>> <%= at(p[1]) %> <small class="muted"><%= p[0] %></small></label>
+      <% }) %>
+    </div>
+    <% if (editable) { %><button><%= at('Lưu quyền') %></button><% } else { %><p class="muted"><%= at('Vai trò này vượt quá phạm vi quyền của bạn nên chỉ xem được.') %></p><% } %>
+  </form>
+  <% if (!r.builtin && editable) { %>
+  <form method="post" action="/admin/roles/<%= r.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger" data-confirm="<%= at('Xóa vai trò') %> <%= r.name %>?"><%= at('Xóa vai trò') %></button></form>
+  <% } %>
+  <% } %>
+</div>
+<% }) %>
+</section></body></html>

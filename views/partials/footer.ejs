@@ -1,0 +1,8 @@
+<footer>
+  <a href="/submit"><%= t('footer.submit') %></a> · <a href="/account"><%= t('footer.owners') %></a> · © <%= new Date().getFullYear() %> <%= site.siteName %>
+  <% if (site.siteCredit) { %> · <%= site.siteCredit %><% } %>
+  · Design by <a href="https://github.com/protech-code" target="_blank" rel="noopener noreferrer">Protech Group And minhduc290613</a>
+  <% if (ui.langSwitch) { %> · <%- include('langswitch') %><% } %>
+  <% if (ui.canToggle) { %> <button type="button" class="theme-toggle" aria-label="<%= t('theme.toggle') %>" title="<%= t('theme.toggle') %>">◐</button><% } %>
+</footer>
+<script src="/app.js" defer></script>

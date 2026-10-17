@@ -1,0 +1,14 @@
+# Chạy app (Postgres + search để ở Aiven hoặc nơi khác, cấu hình trong .env)
+#   docker compose -f docker-compose.prod.yml up -d --build
+services:
+  app:
+    build: .
+    env_file: .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:3000:3000"      # chỉ mở nội bộ, để Nginx/Caddy proxy ra ngoài
+    # Nếu dùng Aiven CA: bỏ comment 2 dòng dưới, đặt ca.pem cạnh file này và PG_CA_PATH=/app/ca.pem
+    # volumes:
+    #   - ./ca.pem:/app/ca.pem:ro
+    restart: unless-stopped

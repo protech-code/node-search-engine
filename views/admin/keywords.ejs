@@ -1,0 +1,42 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Từ khóa') %></h1>
+<% if (error) { %><p class="error"><%= at(error) %></p><% } %>
+<% if (ok) { %><p class="ok"><%= at(ok) %></p><% } %>
+<p class="muted"><b><%= at('Ghim') %></b>: <%= at('luôn hiện ở “Tìm nhiều” và trong gợi ý, kể cả khi chưa ai tìm.') %> <b><%= at('Ẩn') %></b>: <%= at('không bao giờ hiện công khai (gợi ý, trang chủ, sitemap) — dùng cho từ khóa spam/nhạy cảm. Từ khóa người dùng gõ chỉ tự hiện công khai khi được tìm từ 3 lần (đổi bằng') %> <code>KEYWORD_MIN_COUNT</code>).</p>
+
+<form method="post" action="/admin/keywords" class="row">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input name="q" placeholder="<%= at('Nhập từ khóa...') %>" maxlength="60" required>
+  <select name="kind"><option value="pinned"><%= at('Ghim') %></option><option value="blocked"><%= at('Ẩn') %></option></select>
+  <button><%= at('Thêm') %></button>
+</form>
+
+<div class="two">
+  <div><h2><%= at('Đã ghim') %> (<%= pinned.length %>)</h2>
+    <table><% pinned.forEach(function(k){ %><tr><td><%= k.q %></td>
+      <td><form method="post" action="/admin/keywords/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="id" value="<%= k.id %>"><button class="danger"><%= at('Bỏ') %></button></form></td></tr><% }) %></table>
+    <% if (!pinned.length) { %><p class="muted"><%= at('Chưa có từ khóa nào được ghim.') %></p><% } %></div>
+  <div><h2><%= at('Đã ẩn') %> (<%= blocked.length %>)</h2>
+    <table><% blocked.forEach(function(k){ %><tr><td><%= k.q %></td>
+      <td><form method="post" action="/admin/keywords/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="id" value="<%= k.id %>"><button class="danger"><%= at('Bỏ') %></button></form></td></tr><% }) %></table>
+    <% if (!blocked.length) { %><p class="muted"><%= at('Chưa có từ khóa nào bị ẩn.') %></p><% } %></div>
+</div>
+
+<% [['Từ khóa được tìm nhiều', top, true], ['Tìm không có kết quả (nội dung còn thiếu)', empty, false]].forEach(function(sec){ %>
+<h2><%= at(sec[0]) %></h2>
+<table>
+  <tr><th><%= at('Từ khóa') %></th><th><%= at('Lượt') %></th><% if (sec[2]) { %><th><%= at('Kết quả') %></th><% } %><th></th></tr>
+  <% sec[1].forEach(function(t){ %>
+  <tr>
+    <td><%= t.q %></td><td><%= t.c %></td><% if (sec[2]) { %><td><%= t.results %></td><% } %>
+    <td class="actions">
+      <form method="post" action="/admin/keywords"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="q" value="<%= t.q %>"><input type="hidden" name="kind" value="pinned"><button><%= at('Ghim') %></button></form>
+      <form method="post" action="/admin/keywords"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="q" value="<%= t.q %>"><input type="hidden" name="kind" value="blocked"><button class="danger"><%= at('Ẩn') %></button></form>
+      <form method="post" action="/admin/keywords/purge"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="q" value="<%= t.q %>"><button class="link" title="<%= at('Xóa lịch sử của từ khóa này') %>"><%= at('Xóa log') %></button></form>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+<% if (!sec[1].length) { %><p class="muted"><%= at('Chưa có dữ liệu.') %></p><% } %>
+<% }) %>
+</section></body></html>

@@ -1,0 +1,4 @@
+<form class="searchbox" action="/search" method="get" role="search">
+  <input type="search" name="q" value="<%= typeof q !== 'undefined' ? q : '' %>" placeholder="<%= t('search.placeholder') %>" autocomplete="off" maxlength="200" required <%= typeof q === 'undefined' ? 'autofocus' : '' %>>
+  <button type="submit"><%= t('search.button') %></button>
+</form>

@@ -1,0 +1,38 @@
+<%- include('partials/head') %>
+<body class="<%= ui.bgClass %>">
+  <header class="topbar">
+    <span class="logo small"><%- include('partials/brand') %></span>
+    <%- include('partials/searchbox') %>
+  </header>
+  <main class="results">
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } else if (!total) { %>
+      <h1><%= t('results.none', { q }) %></h1>
+      <p><%= t('results.none_hint') %></p>
+    <% } else { %>
+      <p class="meta"><%= t('results.count', { n: numFmt(total), ms }) %></p>
+      <% hits.forEach(function(h){ %>
+        <article class="hit">
+          <div class="url" style="display: flex; align-items: center; gap: 6px;">
+            <img src="https://www.google.com/s2/favicons?domain=<%= h.domain %>&sz=32" 
+                 alt="favicon" 
+                 class="result-favicon" 
+                 onerror="this.onerror=null; this.src='/globe-icon.svg';">
+            <span><%= h.domain %></span>
+          </div>
+          <h2><a href="<%= h.go %>" rel="noopener nofollow"><%- h.title %></a></h2>
+          <p><%- h.snippet %></p>
+        </article>
+      <% }) %>
+      <% if (pageCount > 1) { %>
+        <nav class="pager" aria-label="<%= t('nav.pagination') %>">
+          <% if (page > 1) { %><a href="/search?q=<%= encodeURIComponent(q) %>&page=<%= page - 1 %>" rel="prev"><%= t('results.prev') %></a><% } %>
+          <span><%= t('results.page', { page, pages: pageCount }) %></span>
+          <% if (page < pageCount) { %><a href="/search?q=<%= encodeURIComponent(q) %>&page=<%= page + 1 %>" rel="next"><%= t('results.next') %></a><% } %>
+        </nav>
+      <% } %>
+    <% } %>
+  </main>
+  <%- include('partials/footer') %>
+</body></html>

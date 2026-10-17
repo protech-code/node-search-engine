@@ -1,0 +1,47 @@
+<%- include('../partials/admin-head') %>
+<h1>Search engine</h1>
+<p><%= at('Đang dùng:') %> <span class="tag ok"><%= provider %></span> <span class="muted">(<%= at('(đổi bằng') %> <code>SEARCH_PROVIDER</code> <%= at('trong .env rồi khởi động lại)') %></span></p>
+
+<h2><%= at('Trạng thái kết nối') %></h2>
+<% if (status.ok) { %>
+  <p class="ok"><%= at('✓ Kết nối được.') %></p>
+  <table><% Object.entries(status.details).forEach(function(e){ %><tr><th><%= e[0] %></th><td><%= e[1] %></td></tr><% }) %></table>
+<% } else { %>
+  <p class="error"><%= at('✗ Không kết nối/đọc được engine.') %></p>
+  <pre><code><%= status.message %></code></pre>
+  <% if (status.hint) { %><h3><%= at('Cách sửa') %></h3><pre><code><%= at(status.hint) %></code></pre><% } %>
+<% } %>
+
+<h2><%= at('Cấu hình hiện tại') %></h2>
+<table><% Object.entries(info).forEach(function(e){ %><tr><th><%= e[0] %></th><td><%= e[1] %></td></tr><% }) %></table>
+
+<h2><%= at('Kiểm tra quyền ghi') %></h2>
+<p class="muted"><%= at('Nhiều lỗi quyền (đặc biệt OpenSearch) chỉ lộ ra khi') %> <b><%= at('ghi') %></b>, <%= at('dù đọc vẫn bình thường. Nút này ghi thử rồi xóa một tài liệu mẫu.') %></p>
+<% if (can('engine.manage')) { %>
+<form method="post" action="/admin/engine/test"><input type="hidden" name="_csrf" value="<%= csrf %>"><button><%= at('Ghi thử + xóa thử') %></button></form>
+<% } else { %><p class="muted"><%= at('(Cần quyền engine.manage)') %></p><% } %>
+<% if (test) { %>
+  <p class="<%= test.ok ? 'ok' : 'error' %>"><%= at(test.ok ? '✓ Thành công' : '✗ Thất bại') %></p>
+  <pre><code><%= test.steps.map(at).join('\n') %><% if (!test.ok) { %>
+
+<%= at('Lỗi:') %> <%= at(test.message) %><% } %></code></pre>
+  <% if (!test.ok && test.hint) { %><h3><%= at('Cách sửa') %></h3><pre><code><%= at(test.hint) %></code></pre><% } %>
+<% } %>
+
+<h2><%= at('Lỗi ghi chỉ mục gần đây') %></h2>
+<% if (writes.lastError) { %>
+  <p class="muted"><%= writes.failures %> <%= at('lần lỗi từ khi khởi động; lần cuối:') %> <%= fmt(writes.lastErrorAt) %></p>
+  <pre><code><%= writes.lastError.message %></code></pre>
+  <% if (writes.lastError.hint) { %><pre><code><%= at(writes.lastError.hint) %></code></pre><% } %>
+<% } else { %><p class="muted"><%= at('Chưa ghi nhận lỗi nào.') %></p><% } %>
+
+<h2><%= at('Các engine được hỗ trợ') %></h2>
+<table>
+  <tr><th><%= at('Engine') %></th><th><%= at('Biến .env') %></th><th><%= at('Ghi chú') %></th></tr>
+  <% guides.forEach(function(g){ %>
+  <tr><td><b><%= g.title %></b><% if (g.id === provider) { %> <span class="tag ok"><%= at('đang dùng') %></span><% } %><br><small><code>SEARCH_PROVIDER=<%= g.id %></code></small></td>
+      <td><small><%= g.env %></small></td><td><small><%= at(g.note) %></small></td></tr>
+  <% }) %>
+</table>
+<p class="muted"><%= at('Đổi engine không tự chuyển dữ liệu: sau khi đổi, vào') %> <b><%= at('Nguồn crawl') %></b> <%= at('và crawl lại.') %></p>
+</section></body></html>

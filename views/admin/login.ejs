@@ -1,0 +1,19 @@
+<%- include('../partials/head') %>
+<body class="home">
+  <%- include('../partials/admin-language') %>
+  <main class="login">
+    <h1 class="logo small"><%= at('Admin') %></h1>
+    <% if (typeof flash !== 'undefined' && flash) { %><p class="<%= flash.type %>"><%= at(flash.msg) %></p><% } %>
+    <% if (error) { %><p class="error"><%= at(error) %></p><% } %>
+    <% if (noAdmins) { %>
+      <p class="muted"><%= at('Chưa có quản trị viên nào. Xem') %> <b><%= at('log của server') %></b> <%= at('để lấy link thiết lập (có token), hoặc chạy') %> <code>npm run admin:create</code>.</p>
+    <% } %>
+    <form method="post" action="/admin/login" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <input name="username" placeholder="<%= at('Tài khoản') %>" required autofocus autocomplete="username">
+      <input name="password" type="password" placeholder="<%= at('Mật khẩu') %>" required autocomplete="current-password">
+      <%- include('../partials/turnstile') %>
+      <button type="submit"><%= at('Đăng nhập') %></button>
+    </form>
+  </main>
+</body></html>

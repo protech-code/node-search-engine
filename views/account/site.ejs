@@ -1,0 +1,83 @@
+<%- include('../partials/user-head') %>
+<p><a href="/account"><%= t('site.back') %></a></p>
+<h1><%= mysite.origin %> <span class="tag <%= mysite.verified_at ? 'ok' : '' %>"><%= mysite.verified_at ? t('acc.verified') : t('acc.unverified') %></span></h1>
+
+<% if (!d) { %>
+  <p><%= t('site.verify_intro') %></p>
+
+  <div class="block">
+    <h2><%= t('site.m1_title') %></h2>
+    <p><%= t('site.m1_text') %></p>
+    <pre><code>&lt;meta name="<%= META_NAME %>" content="<%= mysite.verify_token %>"&gt;</code></pre>
+    <form method="post" action="/account/sites/<%= mysite.id %>/verify"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="method" value="meta"><button><%= t('site.m1_btn') %></button></form>
+  </div>
+
+  <div class="block">
+    <h2><%= t('site.m2_title') %></h2>
+    <p><%= t('site.m2_text', { file: fileName, url: mysite.origin + '/' + fileName }) %></p>
+    <pre><code><%= fileBody %></code></pre>
+    <form method="post" action="/account/sites/<%= mysite.id %>/verify"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="method" value="file"><button><%= t('site.m2_btn') %></button></form>
+  </div>
+
+  <div class="block">
+    <h2><%= t('site.m3_title') %></h2>
+    <p><%= t('site.m3_text', { host: mysite.host }) %></p>
+    <pre><code><%= META_NAME %>=<%= mysite.verify_token %></code></pre>
+    <form method="post" action="/account/sites/<%= mysite.id %>/verify"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="method" value="dns"><button><%= t('site.m3_btn') %></button></form>
+  </div>
+
+  <form method="post" action="/account/sites/<%= mysite.id %>/delete" class="danger-zone"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger" data-confirm="<%= t('site.remove_confirm') %>"><%= t('site.remove') %></button></form>
+
+<% } else { %>
+  <div class="cards">
+    <div class="card"><b><%= numFmt(d.indexed) %></b><span><%= t('site.card_indexed') %></span></div>
+    <div class="card"><b><%= numFmt(d.totals.imp) %></b><span><%= t('site.card_impr') %></span></div>
+    <div class="card"><b><%= numFmt(d.totals.clk) %></b><span><%= t('site.card_clicks') %></span></div>
+    <div class="card"><b><%= d.totals.imp ? (d.totals.clk / d.totals.imp * 100).toFixed(1) : '0.0' %>%</b><span><%= t('site.card_ctr') %></span></div>
+  </div>
+
+  <h2><%= t('site.crawl') %></h2>
+  <% if (d.source) { %>
+    <p><%= t('site.status') %> <span class="tag <%= d.running ? 'run' : d.source.status %>"><%= d.running ? 'running' : d.source.status %></span>
+      · <%= t('site.crawled', { a: d.source.pages_crawled, b: d.source.max_pages }) %>
+      · <%= t('site.last', { d: d.source.last_crawled_at ? fmt(d.source.last_crawled_at) : '—' }) %></p>
+    <% if (d.source.last_error) { %><p class="error"><%= d.source.last_error %></p><% } %>
+  <% } %>
+  <form method="post" action="/account/sites/<%= mysite.id %>/recrawl" class="row">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <button <%= (d.running || d.waitMin > 0) ? 'disabled' : '' %>><%= t('site.recrawl') %></button>
+    <% if (d.waitMin > 0) { %><span class="muted"><%= t('site.wait', { n: d.waitMin }) %></span><% } %>
+  </form>
+
+  <h2><%= t('site.sitemap') %></h2>
+  <form method="post" action="/account/sites/<%= mysite.id %>/sitemap" class="row">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <input name="sitemap" type="url" value="<%= d.source?.sitemap_url || '' %>" placeholder="<%= mysite.origin %>/sitemap.xml" maxlength="500">
+    <button><%= t('site.save') %></button>
+  </form>
+  <p class="muted"><%= t('site.sitemap_help') %></p>
+
+  <h2><%= t('site.chart') %></h2>
+  <div class="bars">
+    <% d.perDay.forEach(function(p){ %>
+      <div class="bar"><i style="height:<%= Math.round(p.imp / d.max * 100) %>%"></i><small><%= p.d %></small><em><%= p.imp %></em></div>
+    <% }) %>
+    <% if (!d.perDay.length) { %><p class="muted"><%= t('site.chart_empty') %></p><% } %>
+  </div>
+
+  <div class="two">
+    <div><h2><%= t('site.keywords') %></h2>
+      <table><tr><th><%= t('site.col_keyword') %></th><th><%= t('site.col_impr') %></th><th><%= t('site.col_clicks') %></th></tr>
+        <% d.topQueries.forEach(function(q){ %><tr><td><%= q.q %></td><td><%= q.imp %></td><td><%= q.clk %></td></tr><% }) %></table></div>
+    <div><h2><%= t('site.errors', { n: d.errors.length }) %></h2>
+      <table><tr><th>URL</th><th><%= t('site.col_reason') %></th></tr>
+        <% d.errors.forEach(function(e){ %><tr><td><small><%= e.url %></small></td><td><%= e.reason %></td></tr><% }) %></table></div>
+  </div>
+
+  <h2><%= t('site.pages') %></h2>
+  <table><tr><th><%= t('site.col_title') %></th><th>URL</th></tr>
+    <% d.pageList.forEach(function(p){ %><tr><td><%= p.title %></td><td><small><%= p.url %></small></td></tr><% }) %></table>
+
+  <form method="post" action="/account/sites/<%= mysite.id %>/delete" class="danger-zone"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger" data-confirm="<%= t('site.remove_purge_confirm') %>"><%= t('site.remove_purge') %></button></form>
+<% } %>
+</section><script src="/app.js" defer></script></body></html>

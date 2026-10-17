@@ -1,0 +1,23 @@
+<%- include('../partials/user-head') %>
+<h1><%= t('acc.sites_title') %></h1>
+<form method="post" action="/account/sites" class="row">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input name="url" type="text" inputmode="url" placeholder="https://example.com" required maxlength="500">
+  <button><%= t('acc.add_site') %></button>
+</form>
+<% if (!sites.length) { %>
+  <p class="muted"><%= t('acc.sites_empty') %></p>
+<% } else { %>
+<table>
+  <tr><th><%= t('acc.col_website') %></th><th><%= t('acc.col_status') %></th><th><%= t('acc.col_added') %></th><th></th></tr>
+  <% sites.forEach(function(s){ %>
+  <tr>
+    <td><%= s.origin %></td>
+    <td><span class="tag <%= s.verified_at ? 'ok' : '' %>"><%= s.verified_at ? t('acc.verified') : t('acc.unverified') %></span></td>
+    <td><%= fmt(s.created_at) %></td>
+    <td><a href="/account/sites/<%= s.id %>"><%= s.verified_at ? t('acc.view_stats') : t('acc.verify') %></a></td>
+  </tr>
+  <% }) %>
+</table>
+<% } %>
+</section><script src="/app.js" defer></script></body></html>

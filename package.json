@@ -1,0 +1,29 @@
+{
+  "name": "node-search-engine",
+  "version": "6.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "start": "node --env-file=.env src/server.js",
+    "dev": "node --watch --env-file=.env src/server.js",
+    "admin:create": "node --env-file=.env scripts/admin-create.js",
+    "engine:setup": "node --env-file=.env scripts/engine-setup.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0",
+    "connect-pg-simple": "^10.0.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.4.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "meilisearch": "^0.45.0",
+    "multer": "^2.4.0",
+    "pg": "^8.13.0",
+    "robots-parser": "^3.0.1",
+    "undici": "^6.21.0"
+  }
+}

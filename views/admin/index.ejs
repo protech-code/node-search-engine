@@ -1,0 +1,20 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Index') %></h1>
+<form method="get" class="row">
+  <input name="q" value="<%= q %>" placeholder="<%= at('Lọc theo từ khóa...') %>">
+  <button><%= at('Tìm') %></button>
+</form>
+<table>
+  <tr><th><%= at('Tiêu đề') %></th><th><%= at('URL') %></th><th></th></tr>
+  <% hits.forEach(function(h){ %>
+  <tr>
+    <td><%= h.title %></td><td><small><%= h.url %></small></td>
+    <td><form method="post" action="/admin/index/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="id" value="<%= h.id %>"><button class="danger"><%= at('Xóa') %></button></form></td>
+  </tr>
+  <% }) %>
+</table>
+<form method="post" action="/admin/index/clear" class="danger-zone">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <button class="danger" data-confirm="<%= at('Xóa TOÀN BỘ index?') %>"><%= at('Xóa toàn bộ index') %></button>
+</form>
+</section></body></html>

@@ -1,0 +1,4 @@
+<a class="logo-link" href="/">
+  <% if (ui.logoUrl) { %><img class="logo-img" src="<%= ui.logoUrl %>" alt="<%= site.siteName %>"><% } %>
+  <% if (!ui.logoUrl || ui.showName) { %><span class="logo-name"><%= site.siteName %></span><% } %>
+</a>

@@ -1,0 +1,13 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Cấu hình SEO') %></h1>
+<% if (saved) { %><p class="ok"><%= at('Đã lưu.') %></p><% } %>
+<form method="post" action="/admin/seo" class="stack">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label><%= at('Tên site') %><input name="siteName" value="<%= s.siteName %>" maxlength="60"></label>
+  <label><%= at('Mô tả (meta description)') %><textarea name="siteDescription" rows="3" maxlength="160"><%= s.siteDescription %></textarea></label>
+  <label><%= at('Title template (dùng %s cho tiêu đề trang)') %><input name="titleTemplate" value="<%= s.titleTemplate %>" maxlength="80"></label>
+  <label><%= at('Ảnh Open Graph (URL đầy đủ)') %><input name="ogImage" value="<%= s.ogImage %>" type="url"></label>
+  <button><%= at('Lưu') %></button>
+</form>
+<p class="muted"><%= at('Sitemap:') %> <a href="/sitemap.xml" target="_blank">/sitemap.xml</a> · <%= at('Robots:') %> <a href="/robots.txt" target="_blank">/robots.txt</a></p>
+</section></body></html>

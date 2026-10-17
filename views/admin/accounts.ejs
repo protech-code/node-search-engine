@@ -1,0 +1,72 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Quản lý tài khoản') %></h1>
+
+<h2><%= at('Quản trị viên') %> (<%= admins.length %>)</h2>
+<form method="post" action="/admin/accounts/admins" class="row wrap">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input name="username" placeholder="<%= at('Tên đăng nhập') %>" required pattern="[A-Za-z0-9._-]{3,32}">
+  <input name="password" type="password" placeholder="<%= at('Mật khẩu (≥10 ký tự)') %>" required minlength="10" autocomplete="new-password">
+  <select name="role_id"><% assignable.forEach(function(r){ %><option value="<%= r.id %>"><%= r.name %></option><% }) %></select>
+  <button><%= at('Thêm quản trị viên') %></button>
+</form>
+<table>
+  <tr><th><%= at('Tài khoản') %></th><th><%= at('Vai trò') %></th><th><%= at('Trạng thái') %></th><th><%= at('Đăng nhập cuối') %></th><th><%= at('Thao tác') %></th></tr>
+  <% admins.forEach(function(a){ var me = a.id === admin.id; %>
+  <tr>
+    <td><b><%= a.username %></b><% if (me) { %> <span class="tag"><%= at('bạn') %></span><% } %></td>
+    <td>
+      <% if (me) { %><%= a.role || '—' %>
+      <% } else { %>
+      <form method="post" action="/admin/accounts/admins/<%= a.id %>/role" class="inline">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <select name="role_id"><% roles.forEach(function(r){ %><option value="<%= r.id %>" <%= r.id === a.role_id ? 'selected' : '' %>><%= r.name %></option><% }) %></select>
+        <button><%= at('Đổi') %></button>
+      </form>
+      <% } %>
+    </td>
+    <td><span class="tag <%= a.disabled ? 'error' : 'ok' %>"><%= at(a.disabled ? 'bị khóa' : 'hoạt động') %></span></td>
+    <td><%= fmt(a.last_login_at) %></td>
+    <td class="actions">
+      <form method="post" action="/admin/accounts/admins/<%= a.id %>/password" class="inline">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input name="password" type="password" placeholder="<%= at('Mật khẩu mới') %>" minlength="10" class="mini2" autocomplete="new-password" required>
+        <button><%= at('Đặt lại MK') %></button>
+      </form>
+      <% if (!me) { %>
+      <form method="post" action="/admin/accounts/admins/<%= a.id %>/toggle"><input type="hidden" name="_csrf" value="<%= csrf %>"><button><%= at(a.disabled ? 'Mở khóa' : 'Khóa') %></button></form>
+      <form method="post" action="/admin/accounts/admins/<%= a.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger" data-confirm="<%= at('Xóa quản trị viên') %> <%= a.username %>?"><%= at('Xóa') %></button></form>
+      <% } %>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+
+<h2><%= at('Chủ web') %> (<%= users.length %>)</h2>
+<form method="post" action="/admin/accounts/users" class="row wrap">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input name="email" type="email" placeholder="Email" required maxlength="254">
+  <input name="password" type="password" placeholder="<%= at('Mật khẩu (≥8 ký tự)') %>" required minlength="8" autocomplete="new-password">
+  <button><%= at('Tạo tài khoản chủ web') %></button>
+</form>
+<table>
+  <tr><th><%= at('Email') %></th><th><%= at('Website') %></th><th><%= at('Trạng thái') %></th><th><%= at('Đăng nhập cuối') %></th><th><%= at('Thao tác') %></th></tr>
+  <% users.forEach(function(u){ %>
+  <tr>
+    <td><%= u.email %></td><td><%= u.sites %></td>
+    <td><span class="tag <%= u.disabled ? 'error' : 'ok' %>"><%= at(u.disabled ? 'bị khóa' : 'hoạt động') %></span></td>
+    <td><%= fmt(u.last_login_at) %></td>
+    <td class="actions">
+      <form method="post" action="/admin/accounts/users/<%= u.id %>/password" class="inline">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input name="password" type="password" placeholder="<%= at('Mật khẩu mới') %>" minlength="8" class="mini2" autocomplete="new-password" required>
+        <button><%= at('Đặt lại MK') %></button>
+      </form>
+      <form method="post" action="/admin/accounts/users/<%= u.id %>/toggle"><input type="hidden" name="_csrf" value="<%= csrf %>"><button><%= at(u.disabled ? 'Mở khóa' : 'Khóa') %></button></form>
+      <form method="post" action="/admin/accounts/users/<%= u.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger" data-confirm="<%= at('Xóa tài khoản') %> <%= u.email %> <%= at('và quyền sở hữu các website của họ?') %>"><%= at('Xóa') %></button></form>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+<% if (!users.length) { %><p class="muted"><%= at('Chưa có chủ web nào.') %></p><% } %>
+<p class="muted"><%= at('Khóa/xóa có hiệu lực ngay, kể cả khi người đó đang đăng nhập. Phải luôn còn ít nhất một superadmin hoạt động; bạn không thể khóa/xóa/đổi vai trò của chính mình.') %></p>
+</section></body></html>

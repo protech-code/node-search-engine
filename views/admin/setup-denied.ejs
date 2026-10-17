@@ -1,0 +1,9 @@
+<%- include('../partials/head') %>
+<body class="home">
+  <%- include('../partials/admin-language') %>
+  <main class="login">
+    <h1 class="logo small"><%= at('Thiết lập admin') %></h1>
+    <p class="error"><%= at('Link thiết lập không hợp lệ hoặc đã hết hạn.') %></p>
+    <p class="muted"><%= at('Token chỉ có trong') %> <b><%= at('log khi khởi động server') %></b> <%= at('(và đổi mỗi lần khởi động lại). Hoặc tạo bằng lệnh') %> <code>npm run admin:create</code>.</p>
+  </main>
+</body></html>

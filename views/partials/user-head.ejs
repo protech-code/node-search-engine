@@ -1,0 +1,14 @@
+<%- include('head') %>
+<body class="admin">
+<aside>
+  <div class="brand"><%= t('acc.brand', { site: site.siteName }) %></div>
+  <nav>
+    <a href="/account" class="on"><%= t('acc.nav_sites') %></a>
+    <a href="/" target="_blank"><%= t('acc.view_site') %></a>
+  </nav>
+  <small class="muted"><%= user.email %></small>
+  <small class="muted"><%- include('langswitch') %></small>
+  <form method="post" action="/account/logout"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="link"><%= t('acc.logout') %></button></form>
+</aside>
+<section class="content">
+<% if (typeof flash !== 'undefined' && flash) { %><p class="flashmsg <%= flash.type %>"><%= flash.msg %></p><% } %>

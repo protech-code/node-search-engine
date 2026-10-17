@@ -1,0 +1,40 @@
+# Chỉ dùng cho dev local.  docker compose up -d   (Postgres + Meilisearch)
+# Engine khác (chưa kiểm thử cấu hình compose này, chỉ để thử nhanh):
+#   docker compose --profile typesense up -d   |  --profile elasticsearch  |  --profile opensearch
+services:
+  postgres:
+    image: postgres:16
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_USER: search
+      POSTGRES_PASSWORD: search
+      POSTGRES_DB: search
+    volumes: ["pg_data:/var/lib/postgresql/data"]
+  meilisearch:
+    image: getmeili/meilisearch:v1.10
+    ports: ["7700:7700"]
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_KEY:-masterKey123}
+      MEILI_ENV: development
+    volumes: ["meili_data:/meili_data"]
+
+  typesense:
+    profiles: ["typesense"]
+    image: typesense/typesense:27.1
+    command: ["--data-dir", "/data", "--api-key=devkey123", "--enable-cors"]
+    ports: ["8108:8108"]
+    volumes: ["ts_data:/data"]
+  elasticsearch:
+    profiles: ["elasticsearch"]
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    environment: { discovery.type: single-node, xpack.security.enabled: "false", ES_JAVA_OPTS: "-Xms512m -Xmx512m" }
+    ports: ["9200:9200"]
+  opensearch:
+    profiles: ["opensearch"]
+    image: opensearchproject/opensearch:2.17.1
+    environment: { discovery.type: single-node, DISABLE_SECURITY_PLUGIN: "true", DISABLE_INSTALL_DEMO_CONFIG: "true", OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m" }
+    ports: ["9200:9200"]
+volumes:
+  pg_data:
+  meili_data:
+  ts_data:

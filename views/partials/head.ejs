@@ -1,0 +1,32 @@
+<%
+  const title = meta.fullTitle || (meta.title ? site.titleTemplate.replace('%s', meta.title) : site.siteName);
+  const desc = meta.description || ui.description;
+  const og = ui.ogImage || (ui.logoUrl ? baseUrl + ui.logoUrl : '');
+  const canonical = meta.canonical ? baseUrl + meta.canonical : null;
+%><!doctype html>
+<html lang="<%= lang %>" data-theme="<%= ui.dataTheme %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <meta name="description" content="<%= desc %>">
+  <% if (meta.noindex) { %><meta name="robots" content="noindex, follow"><% } %>
+  <% if (canonical) { %><link rel="canonical" href="<%= canonical %>"><% } %>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="<%= site.siteName %>">
+  <meta property="og:title" content="<%= title %>">
+  <meta property="og:description" content="<%= desc %>">
+  <% if (canonical) { %><meta property="og:url" content="<%= canonical %>"><% } %>
+  <% if (og) { %><meta property="og:image" content="<%= og %>"><% } %>
+  <link rel="icon" href="<%= ui.faviconHref %>">
+  <meta name="theme-color" content="<%= ui.themeColor %>">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="/style.css?v=<%= assetV %>">
+  <style><%- ui.css %></style>
+  <% if (jsonLd) { %>
+  <script type="application/ld+json"><%- JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'WebSite', name: site.siteName, url: baseUrl + '/',
+    potentialAction: { '@type': 'SearchAction', target: baseUrl + '/search?q={search_term_string}', 'query-input': 'required name=search_term_string' }
+  }).replace(/</g, '\\u003c') %></script>
+  <% } %>
+</head>

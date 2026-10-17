@@ -1,0 +1,21 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Yêu cầu gửi website') %></h1>
+<table>
+  <tr><th><%= at('URL') %></th><th><%= at('Email') %></th><th><%= at('IP') %></th><th><%= at('Lúc') %></th><th><%= at('Trạng thái') %></th><th></th></tr>
+  <% rows.forEach(function(s){ %>
+  <tr>
+    <td><%= s.url %></td><td><%= s.email %></td><td><small><%= s.ip %></small></td><td><%= fmt(s.created_at) %></td>
+    <td><span class="tag <%= s.status === 'approved' ? 'ok' : s.status === 'rejected' ? 'error' : '' %>"><%= at(s.status === 'approved' ? 'approved' : s.status === 'rejected' ? 'rejected' : 'pending') %></span></td>
+    <td class="actions">
+      <% if (s.status === 'pending') { %>
+      <form method="post" action="/admin/submissions/<%= s.id %>/approve"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="number" name="max_pages" value="50" min="1" max="2000" class="mini" title="<%= at('Số trang tối đa') %>"><button><%= at('Duyệt + crawl') %></button></form>
+      <form method="post" action="/admin/submissions/<%= s.id %>/reject"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger"><%= at('Từ chối') %></button></form>
+      <% } else { %>
+      <form method="post" action="/admin/submissions/<%= s.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger"><%= at('Xóa') %></button></form>
+      <% } %>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+<% if (!rows.length) { %><p class="muted"><%= at('Chưa có yêu cầu nào.') %></p><% } %>
+</section></body></html>

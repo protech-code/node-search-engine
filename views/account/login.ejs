@@ -1,0 +1,16 @@
+<%- include('../partials/head') %>
+<body class="home <%= ui.bgClass %>">
+  <main class="login">
+    <h1 class="logo small"><%= t('acc.login_title') %></h1>
+    <% if (error) { %><p class="error"><%= error %></p><% } %>
+    <form method="post" action="/account/login" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <input name="email" type="email" placeholder="<%= t('acc.email') %>" required autofocus>
+      <input name="password" type="password" placeholder="<%= t('acc.password') %>" required>
+      <%- include('../partials/turnstile') %>
+      <button type="submit"><%= t('acc.login_btn') %></button>
+    </form>
+    <p class="muted"><%= t('acc.no_account') %> <a href="/account/register"><%= t('acc.register') %></a> · <a href="/"><%= t('footer.home') %></a></p>
+  </main>
+  <%- include('../partials/footer') %>
+</body></html>

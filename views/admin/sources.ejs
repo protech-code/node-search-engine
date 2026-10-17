@@ -1,0 +1,26 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Nguồn crawl') %></h1>
+<% if (error) { %><p class="error"><%= at(error) %></p><% } %>
+<form method="post" action="/admin/sources" class="row">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input name="url" type="url" placeholder="https://example.com" required>
+  <input name="max_pages" type="number" value="50" min="1" max="2000" title="<%= at('Số trang tối đa') %>">
+  <button><%= at('Thêm') %></button>
+</form>
+<table>
+  <tr><th><%= at('URL') %></th><th><%= at('Trạng thái') %></th><th><%= at('Đã crawl') %></th><th><%= at('Lần cuối') %></th><th></th></tr>
+  <% sources.forEach(function(s){ %>
+  <tr>
+    <td><%= s.url %></td>
+    <td><span class="tag <%= s.running ? 'run' : s.status %>"><%= at(s.running ? 'đang chạy' : s.status) %></span><% if (s.last_error) { %><br><small class="error"><%= at(s.last_error) %></small><% } %></td>
+    <td><%= s.pages_crawled %> / <%= s.max_pages %></td>
+    <td><%= s.last_crawled_at ? s.last_crawled_at.slice(0, 16).replace('T', ' ') : '—' %></td>
+    <td class="actions">
+      <form method="post" action="/admin/sources/<%= s.id %>/crawl"><input type="hidden" name="_csrf" value="<%= csrf %>"><button <%= s.running ? 'disabled' : '' %>><%= at('Crawl') %></button></form>
+      <form method="post" action="/admin/sources/<%= s.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger"><%= at('Xóa') %></button></form>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+<p class="muted"><%= at('Trang tự làm mới: tải lại để xem tiến độ. Crawler tôn trọng robots.txt và chỉ đi theo link cùng domain.') %></p>
+</section></body></html>

@@ -1,0 +1,18 @@
+<%- include('../partials/head') %>
+<body class="home">
+  <%- include('../partials/admin-language') %>
+  <main class="login">
+    <h1 class="logo small"><%= at('Tạo quản trị viên đầu tiên') %></h1>
+    <p class="muted"><%= at('Tài khoản này có vai trò') %> <b>superadmin</b> <%= at('(toàn quyền). Link chỉ dùng được một lần.') %></p>
+    <% if (error) { %><p class="error"><%= at(error) %></p><% } %>
+    <form method="post" action="/admin/setup" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <input type="hidden" name="token" value="<%= token %>">
+      <input name="username" placeholder="<%= at('Tên đăng nhập (3-32 ký tự)') %>" required autofocus autocomplete="username" pattern="[A-Za-z0-9._-]{3,32}">
+      <input name="password" type="password" placeholder="<%= at('Mật khẩu (từ 10 ký tự)') %>" required minlength="10" autocomplete="new-password">
+      <input name="confirm" type="password" placeholder="<%= at('Nhập lại mật khẩu') %>" required minlength="10" autocomplete="new-password">
+      <%- include('../partials/turnstile') %>
+      <button type="submit"><%= at('Tạo tài khoản') %></button>
+    </form>
+  </main>
+</body></html>

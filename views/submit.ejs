@@ -1,0 +1,24 @@
+<%- include('partials/head') %>
+<body class="home <%= ui.bgClass %>">
+  <main class="login wide">
+    <span class="logo small"><%- include('partials/brand') %></span>
+    <h1><%= t('submit.title') %></h1>
+    <% if (done) { %>
+      <p class="ok"><%= t('submit.thanks') %></p>
+      <p><%= t('submit.owner_q') %> <a href="/account/register"><%= t('submit.owner_link') %></a>.</p>
+    <% } else { %>
+      <p class="muted"><%= t('submit.intro') %></p>
+      <% if (error) { %><p class="error"><%= error %></p><% } %>
+      <form method="post" action="/submit" class="stack">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input type="hidden" name="ts" value="<%= ts %>">
+        <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label><%= t('submit.url_label') %><input name="url" type="text" inputmode="url" placeholder="https://example.com" required maxlength="500"></label>
+        <label><%= t('submit.email_label') %><input name="email" type="email" placeholder="you@example.com" required maxlength="254"></label>
+        <%- include('partials/turnstile') %>
+        <button type="submit"><%= t('submit.button') %></button>
+      </form>
+    <% } %>
+  </main>
+  <%- include('partials/footer') %>
+</body></html>

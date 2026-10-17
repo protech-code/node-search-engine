@@ -1,0 +1,82 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Giao diện') %></h1>
+<p class="muted"><%= at('Logo, màu chủ đạo, chế độ sáng/tối, ảnh nền và ngôn ngữ của') %> <b><%= at('trang công khai') %></b> <%= at('(trang chủ, kết quả, gửi website, khu chủ web). Khu quản trị có chuyển ngôn ngữ riêng.') %></p>
+
+<h2><%= at('Hình ảnh') %></h2>
+<% [['logo', 'Logo', s.logoV, 'PNG, JPG, WebP, GIF hoặc SVG, tối đa 512 KB', false],
+    ['favicon', 'Favicon (biểu tượng tab trình duyệt)', s.faviconV, 'PNG, ICO hoặc SVG, tối đa 256 KB. Để trống sẽ tự tạo từ chữ cái đầu của tên site', false],
+    ['background', 'Ảnh nền', s.bgV, 'PNG, JPG hoặc WebP, tối đa 2 MB', true]].forEach(function(a){ var key = a[0], ver = a[2]; %>
+<div class="block">
+  <h3><%= at(a[1]) %></h3>
+  <% if (ver) { %>
+    <p><img src="/brand/<%= key %>?v=<%= ver %>" alt="<%= a[1] %>" class="preview <%= key %>"></p>
+  <% } else { %><p class="muted"><%= at('Chưa có.') %></p><% } %>
+  <form method="post" action="/admin/appearance/upload/<%= key %>" enctype="multipart/form-data" class="row wrap">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <input type="file" name="file" accept="image/*" required>
+    <button><%= at('Tải lên') %></button>
+  </form>
+  <p class="muted"><%= at(a[3]) %></p>
+  <% if (ver) { %>
+  <form method="post" action="/admin/appearance/remove/<%= key %>"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger" data-confirm="<%= at('Xóa') %> <%= at(a[1]) %>?"><%= at('Xóa') %></button></form>
+  <% } %>
+</div>
+<% }) %>
+
+<form method="post" action="/admin/appearance" class="stack wide">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+  <h2><%= at('Logo') %></h2>
+
+  <label class="check"><input type="checkbox" name="logoShowName" value="1" <%= s.logoShowName === '1' ? 'checked' : '' %>> <%= at('Hiện tên site bên cạnh logo') %></label>
+  <label><%= at('Chiều cao logo (px, 20–120)') %><input type="number" name="logoHeight" min="20" max="120" value="<%= s.logoHeight %>"></label>
+
+  <h2><%= at('Màu chủ đạo') %></h2>
+  <div class="swatches">
+    <% Object.entries(THEMES).forEach(function(e){ %>
+    <label class="swatch"><input type="radio" name="themePreset" value="<%= e[0] %>" <%= s.themePreset === e[0] ? 'checked' : '' %>><i style="background:<%= e[1] %>"></i><%= e[0] %></label>
+    <% }) %>
+    <label class="swatch"><input type="radio" name="themePreset" value="custom" <%= s.themePreset === 'custom' ? 'checked' : '' %>><i class="rainbow"></i><%= at('tùy chỉnh') %></label>
+  </div>
+  <label><%= at('Màu tùy chỉnh (chỉ dùng khi chọn "tùy chỉnh")') %><input type="color" name="themeColor" value="<%= /^#[0-9a-fA-F]{6}$/.test(s.themeColor) ? s.themeColor : '#1a73e8' %>" class="colorin"></label>
+
+  <h2><%= at('Sáng / tối') %></h2>
+  <label><%= at('Chế độ mặc định') %>
+    <select name="themeMode">
+      <option value="auto" <%= s.themeMode === 'auto' ? 'selected' : '' %>><%= at('Tự động theo thiết bị') %></option>
+      <option value="light" <%= s.themeMode === 'light' ? 'selected' : '' %>><%= at('Luôn sáng') %></option>
+      <option value="dark" <%= s.themeMode === 'dark' ? 'selected' : '' %>><%= at('Luôn tối') %></option>
+    </select></label>
+  <label class="check"><input type="checkbox" name="themeToggle" value="1" <%= s.themeToggle === '1' ? 'checked' : '' %>> <%= at('Cho khách đổi sáng/tối (nút ◐ ở chân trang)') %></label>
+
+  <h2><%= at('Nền') %></h2>
+  <label><%= at('Kiểu nền') %>
+    <select name="bgMode">
+      <option value="none" <%= s.bgMode === 'none' ? 'selected' : '' %>><%= at('Không (màu trơn)') %></option>
+      <option value="gradient" <%= s.bgMode === 'gradient' ? 'selected' : '' %>><%= at('Gradient theo màu chủ đạo') %></option>
+      <option value="image" <%= s.bgMode === 'image' ? 'selected' : '' %>><%= at('Ảnh (tải lên ở trên)') %></option>
+    </select></label>
+  <label><%= at('Kiểu gradient') %>
+    <select name="bgGradient"><% GRADIENTS.forEach(function(g){ %><option value="<%= g %>" <%= s.bgGradient === g ? 'selected' : '' %>><%= g %></option><% }) %></select></label>
+  <label><%= at('Độ phủ nền để chữ dễ đọc (0–80%, áp dụng cho ảnh nền)') %><input type="number" name="bgOverlay" min="0" max="80" value="<%= s.bgOverlay %>"></label>
+
+  <h2><%= at('Ngôn ngữ trang công khai') %></h2>
+  <label><%= at('Ngôn ngữ mặc định') %>
+    <select name="defaultLang">
+      <option value="vi" <%= s.defaultLang === 'vi' ? 'selected' : '' %>><%= at('Tiếng Việt') %></option>
+      <option value="en" <%= s.defaultLang === 'en' ? 'selected' : '' %>><%= at('English') %></option>
+      <option value="auto" <%= s.defaultLang === 'auto' ? 'selected' : '' %>><%= at('Tự động theo trình duyệt của khách') %></option>
+    </select></label>
+  <label class="check"><input type="checkbox" name="langSwitch" value="1" <%= s.langSwitch === '1' ? 'checked' : '' %>> <%= at('Hiện nút chuyển ngôn ngữ (Tiếng Việt | English)') %></label>
+  <label><%= at('Mô tả site bằng tiếng Anh (hiện ở trang chủ và meta khi khách dùng English)') %>
+    <textarea name="siteDescriptionEn" rows="2" maxlength="300"><%= s.siteDescriptionEn %></textarea></label>
+  <p class="muted"><%= at('Mô tả tiếng Việt và tên site chỉnh ở mục SEO. Nếu để trống mô tả tiếng Anh, khách English vẫn thấy mô tả tiếng Việt.') %></p>
+
+  <h2><%= at('Credit') %></h2>
+  <label><%= at('Credit tùy chỉnh ở chân trang (tối đa 200 ký tự)') %>
+    <input type="text" name="siteCredit" maxlength="200" value="<%= s.siteCredit %>" placeholder="<%= at('Ví dụ: Nội dung thuộc về ...') %>"></label>
+  <p class="muted"><%= at('Credit thiết kế cố định “Design by minhduc290613” và liên kết GitHub không thể chỉnh tại đây.') %></p>
+
+  <button><%= at('Lưu giao diện') %></button>
+</form>
+</section></body></html>

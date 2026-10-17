@@ -1,0 +1,16 @@
+<%- include('../partials/admin-head') %>
+<h1><%= at('Website của chủ web') %></h1>
+<table>
+  <tr><th><%= at('Website') %></th><th><%= at('Chủ') %></th><th><%= at('Trạng thái') %></th><th><%= at('Cách xác minh') %></th><th><%= at('Lúc') %></th><th></th></tr>
+  <% rows.forEach(function(s){ %>
+  <tr>
+    <td><%= s.origin %></td><td><%= s.email %></td>
+    <td><span class="tag <%= s.verified_at ? 'ok' : '' %>"><%= at(s.verified_at ? 'đã xác minh' : 'chưa') %></span></td>
+    <td><%= s.verify_method || '—' %></td><td><%= fmt(s.created_at) %></td>
+    <td><form method="post" action="/admin/sites/<%= s.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="danger"><%= at('Thu hồi') %></button></form></td>
+  </tr>
+  <% }) %>
+</table>
+<% if (!rows.length) { %><p class="muted"><%= at('Chưa có chủ web nào đăng ký.') %></p><% } %>
+<p class="muted"><%= at('“Thu hồi” chỉ xóa quyền sở hữu, không xóa dữ liệu đã index (xóa ở mục Nguồn crawl/Index).') %></p>
+</section></body></html>
