@@ -43,6 +43,21 @@ r.get('/search', async (req, res) => {
   });
 });
 
+r.get('/lucky', async (req, res) => {
+  const q = String(req.query.q || '').trim().slice(0, 200);
+  if (!q) return res.redirect('/');
+  try {
+    const data = await search(q, 1);
+    await query('INSERT INTO queries (q, results) VALUES ($1, $2)', [q.toLowerCase(), data.total]);
+    await logEvents('impression', data.hits, q);
+    const first = data.hits[0];
+    if (first) return res.redirect(302, `/go?u=${encodeURIComponent(first.url)}&q=${encodeURIComponent(q)}&s=${sign('go' + first.url)}`);
+  } catch (e) {
+    console.error('lucky search error:', e.message);
+  }
+  res.redirect(`/search?q=${encodeURIComponent(q)}`);
+});
+
 r.get('/go', async (req, res) => {
   const u = String(req.query.u || ''), q = String(req.query.q || '');
   if (!safeEqual(String(req.query.s || ''), sign('go' + u))) return res.status(400).send(req.t('err.link_invalid'));

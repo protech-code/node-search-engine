@@ -11,7 +11,8 @@ A self-hosted search engine built with Node.js. It includes a web crawler, publi
 
 ## Features
 
-- Server-rendered search results with pagination, highlighting, suggestions, and accent-insensitive Vietnamese search.
+- Server-rendered search results with pagination, highlighting, autocomplete, optional browser voice search, local search history, and an “I'm Feeling Lucky” button.
+- Press `/` or `Ctrl+K` to focus search. Search history stays on the device and can be cleared at any time.
 - A crawler that respects `robots.txt`, sitemaps, `noindex`, `nofollow`, and `Crawl-delay`.
 - Five search backends: Meilisearch, OpenSearch, Elasticsearch, Typesense, and PostgreSQL full-text search.
 - Admin tools for crawl sources, the search index, keywords, submitted sites, accounts, roles, SEO, and appearance.

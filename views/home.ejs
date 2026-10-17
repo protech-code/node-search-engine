@@ -4,6 +4,11 @@
     <h1 class="logo"><%- include('partials/brand') %></h1>
     <p class="tagline"><%= ui.description %></p>
     <%- include('partials/searchbox') %>
+    <section class="recent-searches" data-label="<%= t('home.recent') %>" data-clear-label="<%= t('home.clear_recent') %>" hidden>
+      <h2><%= t('home.recent') %></h2>
+      <ul></ul>
+      <button class="recent-clear" type="button"><%= t('home.clear_recent') %></button>
+    </section>
     <% if (popular.length) { %>
       <p class="popular"><%= t('home.popular') %> <% popular.forEach(function(p){ %><a href="/search?q=<%= encodeURIComponent(p) %>"><%= p %></a> <% }) %></p>
     <% } %>

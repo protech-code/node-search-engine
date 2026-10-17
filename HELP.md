@@ -508,6 +508,7 @@ Vẫn lỗi? Xem log của app trước tiên; hầu hết thông báo đều gh
 | Đường dẫn | Chức năng |
 |---|---|
 | `/` · `/search?q=` | Trang chủ, kết quả |
+| `/lucky?q=` | Mở kết quả đầu tiên (nếu có) |
 | `/suggest?q=` | API gợi ý (giới hạn 120 lượt/phút/IP) |
 | `/go` | Chuyển hướng đếm click (link có chữ ký) |
 | `/submit` | Gửi website |

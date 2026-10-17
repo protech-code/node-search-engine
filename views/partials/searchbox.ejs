@@ -1,4 +1,13 @@
 <form class="searchbox" action="/search" method="get" role="search">
-  <input type="search" name="q" value="<%= typeof q !== 'undefined' ? q : '' %>" placeholder="<%= t('search.placeholder') %>" autocomplete="off" maxlength="200" required <%= typeof q === 'undefined' ? 'autofocus' : '' %>>
-  <button type="submit"><%= t('search.button') %></button>
+  <div class="search-field">
+    <span class="search-icon" aria-hidden="true">⌕</span>
+    <input type="search" name="q" value="<%= typeof q !== 'undefined' ? q : '' %>" placeholder="<%= t('search.placeholder') %>" autocomplete="off" maxlength="200" required <%= typeof q === 'undefined' ? 'autofocus' : '' %>>
+    <button class="search-clear" type="button" aria-label="<%= t('search.clear') %>" title="<%= t('search.clear') %>" hidden>×</button>
+    <button class="search-voice" type="button" aria-label="<%= t('search.voice') %>" title="<%= t('search.voice') %>" data-listening="<%= t('search.listening') %>" data-error="<%= t('search.voice_error') %>" hidden>🎙</button>
+    <span class="visually-hidden search-status" aria-live="polite"></span>
+  </div>
+  <div class="search-actions">
+    <button type="submit"><%= t('search.button') %></button>
+    <button class="search-lucky" type="submit" formaction="/lucky"><%= t('search.lucky') %></button>
+  </div>
 </form>

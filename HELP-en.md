@@ -259,6 +259,7 @@ Start with the application logs and Admin → **Engine** diagnostics. Do not exp
 | Route | Purpose |
 |---|---|
 | `/`, `/search?q=` | Home and search results |
+| `/lucky?q=` | Open the first result, if available |
 | `/suggest?q=` | Search suggestions |
 | `/go` | Signed outbound click tracking |
 | `/submit` | Public site submission |
