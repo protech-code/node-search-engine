@@ -555,7 +555,7 @@ npm run engine:setup                        # tạo index + kiểm tra ghi (thê
 
 ## 20. Giao diện: logo, theme, nền và ngôn ngữ
 
-Admin → **Giao diện** (cần quyền `appearance.manage`; superadmin và vai trò `admin` mặc định đều có). Thay đổi áp dụng cho **trang công khai** (trang chủ, kết quả, gửi website, đăng nhập/khu chủ web). Có thể đặt credit tùy chỉnh hiển thị ở chân trang; dòng “Design by minhduc290613” và liên kết GitHub là attribution cố định. Khu admin có bộ chọn Việt/Anh và tùy chỉnh theme riêng cho từng trình duyệt admin (theo thiết bị/sáng/tối, màu preset hoặc màu nhấn tùy chọn); không thay đổi theme của khách truy cập.
+Admin → **Giao diện** (cần quyền `appearance.manage`; superadmin và vai trò `admin` mặc định đều có). Thay đổi áp dụng cho **trang công khai** (trang chủ, kết quả, gửi website, đăng nhập/khu chủ web). Có thể đặt credit tùy chỉnh hiển thị ở chân trang. Khu admin có bộ chọn Việt/Anh và tùy chỉnh theme riêng cho từng trình duyệt admin (theo thiết bị/sáng/tối, màu preset hoặc màu nhấn tùy chọn); không thay đổi theme của khách truy cập.
 
 ### Logo, favicon, ảnh nền
 - Tải ảnh lên ngay trong trang; ảnh được **lưu trong Postgres**, nên không mất khi triển khai bằng Docker hoặc đổi server.

@@ -18,7 +18,7 @@ A self-hosted search engine built with Node.js. It includes a web crawler, publi
 - Admin tools for crawl sources, the search index, keywords, submitted sites, accounts, roles, SEO, and appearance.
 - Site-owner verification and dashboards for indexed pages, impressions, clicks, CTR, and crawl errors.
 - SSRF and CSRF protections, rate limiting, bcrypt password hashes, PostgreSQL sessions, CSP, and optional Cloudflare Turnstile.
-- Vietnamese/English interfaces for public pages and admin. Admins get a separate system/light/dark theme, preset palettes, and a custom accent color. Public logo, theme, background, and footer credit remain configurable under Admin → Appearance. The “Design by minhduc290613” attribution remains fixed.
+- Vietnamese/English interfaces for public pages and admin. Admins get a separate system/light/dark theme, preset palettes, and a custom accent color. Public logo, theme, background, and footer credit remain configurable under Admin → Appearance.
 
 ## Quick start
 

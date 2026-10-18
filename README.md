@@ -18,7 +18,7 @@ Công cụ tìm kiếm tự host bằng Node.js, gồm crawler, trang tìm kiế
 - Admin dashboard: nguồn crawl, index, từ khóa, duyệt website, tài khoản, vai trò, SEO và giao diện.
 - Chủ web có thể xác minh website và xem trang đã index, lượt hiển thị/click, CTR, lỗi crawl.
 - Chống SSRF, CSRF, rate limit, mật khẩu bcrypt, session PostgreSQL, CSP và Cloudflare Turnstile tùy chọn.
-- Trang công khai và khu admin hỗ trợ tiếng Việt/Anh. Admin có theme riêng theo thiết bị/sáng/tối, bảng màu và màu nhấn tùy chỉnh; logo, theme, nền và credit trang public cấu hình trong Admin → Giao diện. Attribution “Design by minhduc290613” được giữ cố định ở footer.
+- Trang công khai và khu admin hỗ trợ tiếng Việt/Anh. Admin có theme riêng theo thiết bị/sáng/tối, bảng màu và màu nhấn tùy chỉnh; logo, theme, nền và credit trang public cấu hình trong Admin → Giao diện.
 
 ## Chạy nhanh
 

@@ -144,7 +144,7 @@ Site owners register under `/account`, add a site, and verify ownership using th
 
 Admin → **Appearance** configures public pages: logo, favicon, theme colors, light/dark mode, background, and default language. Image assets are stored in PostgreSQL. Public pages and admin support Vietnamese and English; the admin language is remembered separately from visitor language. Admins also get a per-browser theme customizer with system/light/dark mode, preset palettes, and a custom accent color. These admin preferences do not change the public site's theme. Site name and descriptions are configured separately under **SEO**.
 
-The appearance page also supports an optional custom footer credit. “Design by minhduc290613” and its GitHub link are fixed attribution and are not editable in admin.
+The appearance page also supports an optional custom footer credit.
 
 ## 11. SEO
 

@@ -206,7 +206,6 @@ const en = {
   Credit: 'Credit',
   'Credit tùy chỉnh ở chân trang (tối đa 200 ký tự)': 'Custom footer credit (up to 200 characters)',
   'Ví dụ: Nội dung thuộc về ...': 'Example: Content by ...',
-  'Credit thiết kế cố định “Design by minhduc290613” và liên kết GitHub không thể chỉnh tại đây.': 'The fixed “Design by minhduc290613” credit and GitHub link cannot be changed here.',
   'Lưu giao diện': 'Save appearance',
   'Logo, màu chủ đạo, chế độ sáng/tối, ảnh nền và ngôn ngữ của': 'Logo, accent color, light/dark mode, background, and language for',
   'trang công khai': 'public pages',
