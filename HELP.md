@@ -397,7 +397,7 @@ Sau deploy, kiểm tra `/`, `/admin/login`, `/sitemap.xml` và `/robots.txt`. N�
 
 Vercel hỗ trợ Express trực tiếp qua `src/server.js`; file `vercel.json` đã cấu hình đóng gói các template EJS trong `views/`. Kết nối repository với Vercel và đặt **Root Directory** là `search-engine` nếu repository có thư mục cha. Không cần build command riêng hay adapter Vercel. Thư mục `public/` được Vercel phục vụ như static assets qua CDN.
 
-Thêm Environment Variables theo hướng dẫn ở mục Netlify: `NODE_ENV=production`, `BASE_URL` là URL HTTPS của deployment/domain riêng, `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER` cùng biến cho search backend. Mỗi lần đổi biến cần redeploy. Chọn PostgreSQL/search service có thể truy cập từ Vercel; đặt `PG_POOL_MAX` phù hợp để tránh mở nhiều kết nối khi function scale.
+Thêm Environment Variables theo hướng dẫn ở mục Netlify: `NODE_ENV=production`, `BASE_URL` là URL HTTPS của deployment/domain riêng, `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER` cùng biến cho search backend. Mỗi lần đổi biến cần redeploy. Trên Vercel, app mặc định giới hạn mỗi instance tối đa 1 kết nối PostgreSQL (`PG_POOL_MAX=1`); có thể khai báo biến này tường minh trong Vercel. Nếu database vẫn báo hết slot kết nối khi tải tăng, dùng URL connection pooler/PgBouncer do nhà cung cấp database cung cấp thay cho kết nối trực tiếp.
 
 Vercel chạy Express dưới dạng Function, không phải VPS luôn bật. Request có giới hạn thời gian theo plan; crawler chạy nền sau khi trả response không được đảm bảo hoàn tất. Dùng VPS/worker riêng cho crawl dài hoặc ổn định. Kiểm tra `/`, `/admin/login`, `/sitemap.xml`, `/robots.txt` và tài nguyên tĩnh sau deploy.
 

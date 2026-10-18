@@ -15,7 +15,12 @@ function build() {
     ssl = { rejectUnauthorized: false };
     console.warn('[db] SSL bật nhưng chưa xác thực chứng chỉ. Đặt PG_CA_PATH=ca.pem (từ Aiven) cho production.');
   }
-  return { connectionString: url.href, ssl, max: Number(process.env.PG_POOL_MAX || 10) };
+  const serverless = Boolean(process.env.VERCEL || process.env.NETLIFY);
+  return {
+    connectionString: url.href,
+    ssl,
+    max: Number(process.env.PG_POOL_MAX || (serverless ? 1 : 10)),
+  };
 }
 
 export const pool = new pg.Pool(build());
