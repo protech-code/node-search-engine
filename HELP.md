@@ -377,7 +377,21 @@ TURNSTILE_SITE_KEY=...  TURNSTILE_SECRET_KEY=...
 BOT_UA=MySearchBot/1.0 (+https://tim.example.com/bot)
 ```
 
-### 14.2 Chạy bằng PM2 (cách đơn giản)
+### 14.2 Netlify Functions
+
+Project có sẵn `netlify.toml` và adapter tại `netlify/functions/api.mjs`. Đưa mã nguồn lên GitHub rồi tạo site trên Netlify. Nếu repository chứa cả thư mục cha, đặt **Base directory** là `search-engine`; nếu repository chính là nội dung thư mục này thì dùng thư mục gốc. Netlify sẽ cài dependency từ `package-lock.json` và dùng Node.js 22. Không đặt build command `npm start`: Netlify chạy app qua Function, không chạy tiến trình server liên tục.
+
+Trong **Site configuration → Environment variables**, cấu hình tối thiểu các biến trong mục 4: `NODE_ENV=production`, `BASE_URL` (domain HTTPS của Netlify hoặc domain riêng), `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER` và các biến tương ứng của search backend. Thêm `TURNSTILE_SITE_KEY`/`TURNSTILE_SECRET_KEY` nếu bật captcha. Không dùng `PG_CA_PATH` trỏ tới file trên máy cá nhân; nếu cần CA riêng, phải đóng gói file đó trong project và đặt đường dẫn tương đối đúng. Sau khi thêm/sửa biến, deploy lại.
+
+Giới hạn cần biết:
+- Netlify Functions là serverless, không phải server chạy thường trực. Các thao tác crawl khởi chạy nền có thể bị dừng khi Function kết thúc; dùng VPS/worker riêng nếu cần crawl ổn định hoặc crawl lâu.
+- Function đồng bộ có giới hạn thời gian chạy và request/response; thao tác upload lớn hoặc crawl lâu có thể timeout. Nội dung ảnh giao diện và session vẫn được lưu trong PostgreSQL, không dựa vào ổ đĩa tạm.
+- Khởi tạo database và search backend diễn ra khi Function khởi động lạnh; nên dùng PostgreSQL/search service có thể truy cập từ Netlify và giới hạn connection pool (`PG_POOL_MAX`, ví dụ `5`) để tránh mở quá nhiều kết nối.
+- Link tạo admin đầu tiên được ghi vào log khi Function khởi động. Khi chưa có admin, link có thể đổi sau cold start; hoàn tất tạo admin ngay sau khi deploy.
+
+Sau deploy, kiểm tra `/`, `/admin/login`, `/sitemap.xml` và `/robots.txt`. Nếu cần crawler luôn hoạt động, triển khai app trên VPS/Docker như các mục dưới.
+
+### 14.3 Chạy bằng PM2 (cách đơn giản)
 
 ```bash
 npm i -g pm2
@@ -386,14 +400,14 @@ pm2 save && pm2 startup        # làm theo lệnh nó in ra để tự chạy kh
 pm2 logs search
 ```
 
-### 14.3 Hoặc chạy bằng Docker
+### 14.4 Hoặc chạy bằng Docker
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 Nếu dùng `ca.pem`, bỏ comment phần `volumes` trong file compose và đặt `PG_CA_PATH=/app/ca.pem`. App chỉ mở ở `127.0.0.1:3000`; Nginx sẽ proxy ra ngoài.
 
-### 14.4 Nginx + HTTPS
+### 14.5 Nginx + HTTPS
 
 `/etc/nginx/sites-available/search`:
 ```nginx
@@ -416,7 +430,7 @@ sudo nginx -t && sudo systemctl reload nginx
 sudo certbot --nginx -d tim.example.com      # bật HTTPS
 ```
 
-### 14.5 Hai điểm dễ sai
+### 14.6 Hai điểm dễ sai
 
 - **Production bắt buộc HTTPS.** Với `NODE_ENV=production`, cookie đăng nhập chỉ gửi qua HTTPS. Chạy HTTP sẽ **không đăng nhập được** (đăng nhập xong lại bị đưa về trang login).
 - **`TRUST_PROXY` phải đúng số lớp proxy.** Sai thì rate limit và captcha thấy sai IP (mọi người dùng có thể bị tính chung một IP). Nginx một mình = `1`; nếu bật proxy cam (đám mây) của Cloudflare phía trước Nginx = `2`.

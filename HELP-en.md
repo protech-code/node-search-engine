@@ -154,7 +154,7 @@ Search pages with no results and pages after the first are marked `noindex`. The
 
 ## 12. Production deployment
 
-Use a Linux server with a domain pointing to it. Configure PostgreSQL, a search backend, HTTPS, and a strong session secret. Minimum environment:
+For a traditional server deployment, use a Linux server with a domain pointing to it. Configure PostgreSQL, a search backend, HTTPS, and a strong session secret. Minimum environment:
 
 ```env
 NODE_ENV=production
@@ -167,6 +167,20 @@ SEARCH_PROVIDER=meilisearch
 TURNSTILE_SITE_KEY=<site-key>
 TURNSTILE_SECRET_KEY=<secret-key>
 ```
+
+### Netlify Functions
+
+The project includes `netlify.toml` and an adapter at `netlify/functions/api.mjs`. Connect the source to a Netlify site. If the repository contains the parent directory, set the Netlify **Base directory** to `search-engine`; otherwise use the repository root. Netlify installs dependencies from `package-lock.json` and uses Node.js 22. Do not set the build command to `npm start`: Netlify invokes the app as a Function rather than running a persistent server process.
+
+In **Site configuration → Environment variables**, configure at least the variables described in section 4: `NODE_ENV=production`, `BASE_URL` (the HTTPS Netlify or custom domain), `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER`, and the corresponding search-backend variables. Add the Turnstile keys if enabled. Do not point `PG_CA_PATH` to a file on your local machine; package a custom CA file with the project and set its correct relative path if required. Redeploy after changing environment variables.
+
+Important serverless limitations:
+- Netlify Functions are not persistent servers. Background crawl work may be stopped when a Function returns; use a separate VPS/worker for reliable or long-running crawling.
+- Functions have execution and request/response size limits. Large uploads or long crawls may time out. Appearance assets and sessions are stored in PostgreSQL, not on temporary disk.
+- Database and search-backend initialization happens on cold starts. Use services reachable from Netlify and limit database connections with `PG_POOL_MAX` (for example, `5`).
+- The first-admin setup link is written to Function logs on startup. It may change after a cold start before an admin exists, so complete setup immediately after deployment.
+
+After deployment, check `/`, `/admin/login`, `/sitemap.xml`, and `/robots.txt`. If you need a continuously available crawler, deploy the app on a VPS/Docker using the options below.
 
 Install production dependencies with `npm ci --omit=dev`. Run with a process manager, for example:
 
