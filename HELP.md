@@ -383,7 +383,7 @@ Project có sẵn `netlify.toml` và adapter tại `netlify/functions/api.mjs`. 
 
 Trong **Site configuration → Environment variables**, cấu hình tối thiểu các biến trong mục 4: `NODE_ENV=production`, `BASE_URL` (domain HTTPS của Netlify hoặc domain riêng), `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER` và các biến tương ứng của search backend. Thêm `TURNSTILE_SITE_KEY`/`TURNSTILE_SECRET_KEY` nếu bật captcha. Không dùng `PG_CA_PATH` trỏ tới file trên máy cá nhân; nếu cần CA riêng, phải đóng gói file đó trong project và đặt đường dẫn tương đối đúng. Sau khi thêm/sửa biến, deploy lại.
 
-Nếu secrets scanning báo nhầm `BASE_URL`, `SEARCH_PROVIDER` hoặc `PORT`, vào **Site configuration → Environment variables**, thêm biến `SECRETS_SCAN_OMIT_KEYS` với giá trị `BASE_URL,SEARCH_PROVIDER,PORT`, rồi deploy lại. Đây là các giá trị cấu hình công khai, không phải credential; không đưa `DATABASE_URL`, `SESSION_SECRET`, API key hoặc mật khẩu vào danh sách bỏ qua và không tắt toàn bộ secret scanning.
+`netlify.toml` đã cấu hình `SECRETS_SCAN_OMIT_KEYS=BASE_URL,SEARCH_PROVIDER,PORT` để tránh scanner báo nhầm các giá trị cấu hình công khai này. Nếu log vẫn báo, kiểm tra mục **Resolved config** sau deploy có `SECRETS_SCAN_OMIT_KEYS` chưa; nếu chưa, thêm biến này trong **Site configuration → Environment variables** với cùng giá trị rồi deploy lại. Không đưa `DATABASE_URL`, `SESSION_SECRET`, API key hoặc mật khẩu vào danh sách bỏ qua và không tắt toàn bộ secret scanning.
 
 Giới hạn cần biết:
 - Netlify Functions là serverless, không phải server chạy thường trực. Các thao tác crawl khởi chạy nền có thể bị dừng khi Function kết thúc; dùng VPS/worker riêng nếu cần crawl ổn định hoặc crawl lâu.

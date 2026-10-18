@@ -174,7 +174,7 @@ The project includes `netlify.toml` and an adapter at `netlify/functions/api.mjs
 
 In **Site configuration → Environment variables**, configure at least the variables described in section 4: `NODE_ENV=production`, `BASE_URL` (the HTTPS Netlify or custom domain), `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER`, and the corresponding search-backend variables. Add the Turnstile keys if enabled. Do not point `PG_CA_PATH` to a file on your local machine; package a custom CA file with the project and set its correct relative path if required. Redeploy after changing environment variables.
 
-If secret scanning reports false positives for `BASE_URL`, `SEARCH_PROVIDER`, or `PORT`, add `SECRETS_SCAN_OMIT_KEYS` with the value `BASE_URL,SEARCH_PROVIDER,PORT` under **Site configuration → Environment variables**, then redeploy. These are public configuration values, not credentials; do not omit `DATABASE_URL`, `SESSION_SECRET`, API keys, or passwords, and do not disable secret scanning entirely.
+`netlify.toml` configures `SECRETS_SCAN_OMIT_KEYS=BASE_URL,SEARCH_PROVIDER,PORT` to avoid false positives for these public configuration values. If the scanner still reports them, check that `SECRETS_SCAN_OMIT_KEYS` appears in the deploy's **Resolved config**; if it does not, add it under **Site configuration → Environment variables** with the same value and redeploy. Do not omit `DATABASE_URL`, `SESSION_SECRET`, API keys, or passwords, and do not disable secret scanning entirely.
 
 Important serverless limitations:
 - Netlify Functions are not persistent servers. Background crawl work may be stopped when a Function returns; use a separate VPS/worker for reliable or long-running crawling.

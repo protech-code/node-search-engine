@@ -3,6 +3,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  SECRETS_SCAN_OMIT_KEYS = "BASE_URL,SEARCH_PROVIDER,PORT"
 
 [functions]
   directory = "netlify/functions"
