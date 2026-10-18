@@ -16,10 +16,12 @@ function build() {
     console.warn('[db] SSL bật nhưng chưa xác thực chứng chỉ. Đặt PG_CA_PATH=ca.pem (từ Aiven) cho production.');
   }
   const serverless = Boolean(process.env.VERCEL || process.env.NETLIFY);
+  const configuredMax = Number(process.env.PG_POOL_MAX || (serverless ? 1 : 10));
   return {
     connectionString: url.href,
     ssl,
-    max: Number(process.env.PG_POOL_MAX || (serverless ? 1 : 10)),
+    max: serverless ? Math.min(configuredMax, 1) : configuredMax,
+    idleTimeoutMillis: serverless ? 5000 : 10000,
   };
 }
 
