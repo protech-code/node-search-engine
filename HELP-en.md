@@ -184,6 +184,14 @@ Important serverless limitations:
 
 After deployment, check `/`, `/admin/login`, `/sitemap.xml`, and `/robots.txt`. If you need a continuously available crawler, deploy the app on a VPS/Docker using the options below.
 
+### Vercel
+
+Vercel supports Express directly through `src/server.js`; `vercel.json` configures the EJS templates in `views/` to be included. Connect the repository to Vercel and set the **Root Directory** to `search-engine` if the repository contains a parent directory. No custom build command or Vercel adapter is needed. Vercel serves files in `public/` as static CDN assets.
+
+Add the environment variables described above: `NODE_ENV=production`, `BASE_URL` set to the HTTPS deployment/custom domain, `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER`, and the search-backend variables. Redeploy after changing variables. Use PostgreSQL/search services reachable from Vercel, and tune `PG_POOL_MAX` to avoid excessive connections as functions scale.
+
+Vercel runs Express as a Function, not as an always-on VPS. Requests have plan-dependent duration limits, and background crawling after a response is not guaranteed to finish. Use a separate VPS/worker for long-running or reliable crawling. After deployment, check `/`, `/admin/login`, `/sitemap.xml`, `/robots.txt`, and static assets.
+
 Install production dependencies with `npm ci --omit=dev`. Run with a process manager, for example:
 
 ```bash

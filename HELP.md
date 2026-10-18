@@ -393,7 +393,15 @@ Giới hạn cần biết:
 
 Sau deploy, kiểm tra `/`, `/admin/login`, `/sitemap.xml` và `/robots.txt`. Nếu cần crawler luôn hoạt động, triển khai app trên VPS/Docker như các mục dưới.
 
-### 14.3 Chạy bằng PM2 (cách đơn giản)
+### 14.3 Vercel
+
+Vercel hỗ trợ Express trực tiếp qua `src/server.js`; file `vercel.json` đã cấu hình đóng gói các template EJS trong `views/`. Kết nối repository với Vercel và đặt **Root Directory** là `search-engine` nếu repository có thư mục cha. Không cần build command riêng hay adapter Vercel. Thư mục `public/` được Vercel phục vụ như static assets qua CDN.
+
+Thêm Environment Variables theo hướng dẫn ở mục Netlify: `NODE_ENV=production`, `BASE_URL` là URL HTTPS của deployment/domain riêng, `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER` cùng biến cho search backend. Mỗi lần đổi biến cần redeploy. Chọn PostgreSQL/search service có thể truy cập từ Vercel; đặt `PG_POOL_MAX` phù hợp để tránh mở nhiều kết nối khi function scale.
+
+Vercel chạy Express dưới dạng Function, không phải VPS luôn bật. Request có giới hạn thời gian theo plan; crawler chạy nền sau khi trả response không được đảm bảo hoàn tất. Dùng VPS/worker riêng cho crawl dài hoặc ổn định. Kiểm tra `/`, `/admin/login`, `/sitemap.xml`, `/robots.txt` và tài nguyên tĩnh sau deploy.
+
+### 14.4 Chạy bằng PM2 (cách đơn giản)
 
 ```bash
 npm i -g pm2
@@ -402,14 +410,14 @@ pm2 save && pm2 startup        # làm theo lệnh nó in ra để tự chạy kh
 pm2 logs search
 ```
 
-### 14.4 Hoặc chạy bằng Docker
+### 14.5 Hoặc chạy bằng Docker
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 Nếu dùng `ca.pem`, bỏ comment phần `volumes` trong file compose và đặt `PG_CA_PATH=/app/ca.pem`. App chỉ mở ở `127.0.0.1:3000`; Nginx sẽ proxy ra ngoài.
 
-### 14.5 Nginx + HTTPS
+### 14.6 Nginx + HTTPS
 
 `/etc/nginx/sites-available/search`:
 ```nginx
@@ -432,7 +440,7 @@ sudo nginx -t && sudo systemctl reload nginx
 sudo certbot --nginx -d tim.example.com      # bật HTTPS
 ```
 
-### 14.6 Hai điểm dễ sai
+### 14.7 Hai điểm dễ sai
 
 - **Production bắt buộc HTTPS.** Với `NODE_ENV=production`, cookie đăng nhập chỉ gửi qua HTTPS. Chạy HTTP sẽ **không đăng nhập được** (đăng nhập xong lại bị đưa về trang login).
 - **`TRUST_PROXY` phải đúng số lớp proxy.** Sai thì rate limit và captcha thấy sai IP (mọi người dùng có thể bị tính chung một IP). Nginx một mình = `1`; nếu bật proxy cam (đám mây) của Cloudflare phía trước Nginx = `2`.
