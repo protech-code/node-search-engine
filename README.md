@@ -11,7 +11,7 @@ Công cụ tìm kiếm tự host bằng Node.js, gồm crawler, trang tìm kiế
 
 ## Tính năng
 
-- Tìm kiếm SSR, phân trang, highlight, autocomplete, tìm kiếm bằng giọng nói (trình duyệt hỗ trợ), lịch sử cục bộ và nút “Tôi cảm thấy may mắn”.
+- Tìm kiếm SSR, phân trang, highlight, autocomplete, tìm kiếm bằng giọng nói (trình duyệt hỗ trợ), lịch sử cục bộ và nút “Xem trang đầu tiên tìm được”.
 - Phím tắt `/` hoặc `Ctrl+K` để focus ô tìm kiếm; lịch sử chỉ lưu trên thiết bị và có thể xóa bất cứ lúc nào.
 - Crawler tôn trọng `robots.txt`, sitemap, `noindex`, `nofollow` và `Crawl-delay`.
 - Năm search backend: Meilisearch, OpenSearch, Elasticsearch, Typesense và PostgreSQL full-text.

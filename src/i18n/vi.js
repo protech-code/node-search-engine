@@ -6,7 +6,7 @@ export default {
   'search.voice': 'Tìm kiếm bằng giọng nói',
   'search.listening': 'Đang nghe...',
   'search.voice_error': 'Không thể nhận giọng nói. Hãy thử nhập từ khóa.',
-  'search.lucky': 'Tôi cảm thấy may mắn',
+  'search.lucky': 'Xem trang đầu tiên tìm được',
   'home.popular': 'Tìm nhiều:',
   'home.recent': 'Tìm kiếm gần đây',
   'home.clear_recent': 'Xóa lịch sử',
