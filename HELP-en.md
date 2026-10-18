@@ -170,7 +170,7 @@ TURNSTILE_SECRET_KEY=<secret-key>
 
 ### Netlify Functions
 
-The project includes `netlify.toml` and an adapter at `netlify/functions/api.mjs`. Connect the source to a Netlify site. If the repository contains the parent directory, set the Netlify **Base directory** to `search-engine`; otherwise use the repository root. Netlify installs dependencies from `package-lock.json` and uses Node.js 22. Do not set the build command to `npm start`: Netlify invokes the app as a Function rather than running a persistent server process.
+The project includes `netlify.toml` and a CommonJS adapter at `netlify/functions/api.cjs`. Connect the source to a Netlify site. If the repository contains the parent directory, set the Netlify **Base directory** to `search-engine`; otherwise use the repository root. Netlify installs dependencies from `package-lock.json` and uses Node.js 22. Do not set the build command to `npm start`: Netlify invokes the app as a Function rather than running a persistent server process.
 
 In **Site configuration → Environment variables**, configure at least the variables described in section 4: `NODE_ENV=production`, `BASE_URL` (the HTTPS Netlify or custom domain), `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER`, and the corresponding search-backend variables. Add the Turnstile keys if enabled. Do not point `PG_CA_PATH` to a file on your local machine; package a custom CA file with the project and set its correct relative path if required. Redeploy after changing environment variables.
 

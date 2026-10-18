@@ -379,7 +379,7 @@ BOT_UA=MySearchBot/1.0 (+https://tim.example.com/bot)
 
 ### 14.2 Netlify Functions
 
-Project có sẵn `netlify.toml` và adapter tại `netlify/functions/api.mjs`. Đưa mã nguồn lên GitHub rồi tạo site trên Netlify. Nếu repository chứa cả thư mục cha, đặt **Base directory** là `search-engine`; nếu repository chính là nội dung thư mục này thì dùng thư mục gốc. Netlify sẽ cài dependency từ `package-lock.json` và dùng Node.js 22. Không đặt build command `npm start`: Netlify chạy app qua Function, không chạy tiến trình server liên tục.
+Project có sẵn `netlify.toml` và adapter CommonJS tại `netlify/functions/api.cjs`. Đưa mã nguồn lên GitHub rồi tạo site trên Netlify. Nếu repository chứa cả thư mục cha, đặt **Base directory** là `search-engine`; nếu repository chính là nội dung thư mục này thì dùng thư mục gốc. Netlify sẽ cài dependency từ `package-lock.json` và dùng Node.js 22. Không đặt build command `npm start`: Netlify chạy app qua Function, không chạy tiến trình server liên tục.
 
 Trong **Site configuration → Environment variables**, cấu hình tối thiểu các biến trong mục 4: `NODE_ENV=production`, `BASE_URL` (domain HTTPS của Netlify hoặc domain riêng), `SESSION_SECRET`, `DATABASE_URL`, `SEARCH_PROVIDER` và các biến tương ứng của search backend. Thêm `TURNSTILE_SITE_KEY`/`TURNSTILE_SECRET_KEY` nếu bật captcha. Không dùng `PG_CA_PATH` trỏ tới file trên máy cá nhân; nếu cần CA riêng, phải đóng gói file đó trong project và đặt đường dẫn tương đối đúng. Sau khi thêm/sửa biến, deploy lại.
 
