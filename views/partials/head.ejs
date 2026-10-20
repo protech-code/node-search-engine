@@ -23,6 +23,10 @@
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="/style.css?v=<%= assetV %>">
   <style><%- ui.css %></style>
+  <% if (analyticsEnabled) { %>
+  <script src="/vercel-analytics.js?v=<%= assetV %>" defer></script>
+  <script src="/_vercel/insights/script.js" defer></script>
+  <% } %>
   <% if (jsonLd) { %>
   <script type="application/ld+json"><%- JSON.stringify({
     '@context': 'https://schema.org', '@type': 'WebSite', name: site.siteName, url: baseUrl + '/',

@@ -23,6 +23,7 @@ const port = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(root, 'views'));
+app.locals.analyticsEnabled = process.env.NODE_ENV === 'production';
 // Số lớp proxy phía trước app (Nginx = 1; Cloudflare + Nginx = 2). Quyết định IP thật cho rate limit.
 app.set('trust proxy', Number(process.env.TRUST_PROXY ?? 1));
 app.disable('x-powered-by');

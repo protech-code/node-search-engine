@@ -12,6 +12,7 @@
     "engine:setup": "node --env-file=.env scripts/engine-setup.js"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0",
     "connect-pg-simple": "^10.0.0",
